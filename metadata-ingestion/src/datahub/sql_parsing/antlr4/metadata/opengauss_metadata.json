@@ -1,0 +1,847 @@
+{
+  "engine": "OPENGAUSS",
+  "catalog": "og_catalog",
+  "generated_at": "2024-01-01T00:00:00Z",
+  "datasets": [
+    {
+      "id": "ds_og_ods_raw_orders",
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:opengauss,og_catalog.ods.raw_orders,PROD)",
+      "schema": "ods",
+      "table": "raw_orders",
+      "layer": "ODS",
+      "is_intermediate": false,
+      "is_partitioned": false,
+      "partition_keys": [],
+      "comment": "原始订单导入表 / Raw order import table",
+      "primary_keys": [
+        "order_id"
+      ],
+      "columns": [
+        {
+          "name_en": "order_id",
+          "name_cn": "订单ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "订单唯一标识"
+        },
+        {
+          "name_en": "user_id",
+          "name_cn": "用户ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "用户ID"
+        },
+        {
+          "name_en": "product_id",
+          "name_cn": "商品ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "商品ID"
+        },
+        {
+          "name_en": "order_amount",
+          "name_cn": "订单金额",
+          "type": "NUMERIC(18,2)",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "订单金额"
+        },
+        {
+          "name_en": "pay_channel",
+          "name_cn": "支付渠道",
+          "type": "VARCHAR(32)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "支付渠道"
+        },
+        {
+          "name_en": "order_status",
+          "name_cn": "订单状态",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "PENDING/PAID/CANCELLED"
+        },
+        {
+          "name_en": "dt",
+          "name_cn": "数据日期",
+          "type": "DATE",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "数据日期"
+        }
+      ]
+    },
+    {
+      "id": "ds_og_dwd_orders",
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:opengauss,og_catalog.dwd.orders,PROD)",
+      "schema": "dwd",
+      "table": "orders",
+      "layer": "DWD",
+      "is_intermediate": false,
+      "is_partitioned": true,
+      "partition_keys": [
+        "dt"
+      ],
+      "comment": "订单明细宽表（范围分区）/ Order detail table (range partitioned by dt)",
+      "primary_keys": [
+        "order_id",
+        "dt"
+      ],
+      "columns": [
+        {
+          "name_en": "order_id",
+          "name_cn": "订单ID",
+          "type": "BIGSERIAL",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "自增订单ID"
+        },
+        {
+          "name_en": "user_id",
+          "name_cn": "用户ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "用户ID"
+        },
+        {
+          "name_en": "product_id",
+          "name_cn": "商品ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "商品ID"
+        },
+        {
+          "name_en": "category_id",
+          "name_cn": "类目ID",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "类目ID"
+        },
+        {
+          "name_en": "order_amount",
+          "name_cn": "订单金额",
+          "type": "NUMERIC(18,2)",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "含税总价"
+        },
+        {
+          "name_en": "discount_amount",
+          "name_cn": "优惠金额",
+          "type": "NUMERIC(18,2)",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "折扣金额"
+        },
+        {
+          "name_en": "net_amount",
+          "name_cn": "实付金额",
+          "type": "NUMERIC(18,2)",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "实际支付金额（计算列）"
+        },
+        {
+          "name_en": "pay_channel",
+          "name_cn": "支付渠道",
+          "type": "VARCHAR(32)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "支付方式"
+        },
+        {
+          "name_en": "order_status",
+          "name_cn": "订单状态",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "订单当前状态"
+        },
+        {
+          "name_en": "logistics_id",
+          "name_cn": "物流ID",
+          "type": "BIGINT",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "物流ID"
+        },
+        {
+          "name_en": "region_id",
+          "name_cn": "区域ID",
+          "type": "INTEGER",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "订单归属区域"
+        },
+        {
+          "name_en": "created_at",
+          "name_cn": "创建时间",
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "订单创建时间"
+        },
+        {
+          "name_en": "updated_at",
+          "name_cn": "更新时间",
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "最后更新时间"
+        },
+        {
+          "name_en": "dt",
+          "name_cn": "分区日期",
+          "type": "DATE",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "分区字段"
+        }
+      ]
+    },
+    {
+      "id": "ds_og_dwd_user_profile",
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:opengauss,og_catalog.dwd.user_profile,PROD)",
+      "schema": "dwd",
+      "table": "user_profile",
+      "layer": "DWD",
+      "is_intermediate": false,
+      "is_partitioned": true,
+      "partition_keys": [
+        "user_id"
+      ],
+      "comment": "用户画像宽表（Hash分区）/ User profile table (hash partitioned by user_id)",
+      "primary_keys": [
+        "user_id"
+      ],
+      "columns": [
+        {
+          "name_en": "user_id",
+          "name_cn": "用户ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "用户唯一ID"
+        },
+        {
+          "name_en": "username",
+          "name_cn": "用户名",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "用户名"
+        },
+        {
+          "name_en": "email",
+          "name_cn": "邮箱",
+          "type": "VARCHAR(128)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "注册邮箱（唯一）"
+        },
+        {
+          "name_en": "phone",
+          "name_cn": "手机号",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "手机号"
+        },
+        {
+          "name_en": "age_group",
+          "name_cn": "年龄段",
+          "type": "VARCHAR(16)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "年龄段"
+        },
+        {
+          "name_en": "gender",
+          "name_cn": "性别",
+          "type": "CHAR(1)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "M/F/U"
+        },
+        {
+          "name_en": "city",
+          "name_cn": "城市",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "所在城市"
+        },
+        {
+          "name_en": "region_id",
+          "name_cn": "区域ID",
+          "type": "INTEGER",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "关联区域"
+        },
+        {
+          "name_en": "vip_level",
+          "name_cn": "会员等级",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "NORMAL/GOLD/VIP"
+        },
+        {
+          "name_en": "total_orders",
+          "name_cn": "累计订单数",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "历史累计订单数"
+        },
+        {
+          "name_en": "total_spent",
+          "name_cn": "累计消费",
+          "type": "NUMERIC(18,2)",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "历史累计实付金额"
+        },
+        {
+          "name_en": "is_active",
+          "name_cn": "是否活跃",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "账号是否活跃"
+        },
+        {
+          "name_en": "is_deleted",
+          "name_cn": "是否注销",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "GDPR删除标记"
+        },
+        {
+          "name_en": "register_time",
+          "name_cn": "注册时间",
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "账号注册时间"
+        },
+        {
+          "name_en": "updated_at",
+          "name_cn": "更新时间",
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "最后更新时间"
+        }
+      ]
+    },
+    {
+      "id": "ds_og_dwd_product_catalog",
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:opengauss,og_catalog.dwd.product_catalog,PROD)",
+      "schema": "dwd",
+      "table": "product_catalog",
+      "layer": "DWD",
+      "is_intermediate": false,
+      "is_partitioned": false,
+      "partition_keys": [],
+      "comment": "商品目录宽表（含JSONB属性）/ Product catalog with JSONB attributes",
+      "primary_keys": [
+        "product_id"
+      ],
+      "columns": [
+        {
+          "name_en": "product_id",
+          "name_cn": "商品ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "商品唯一ID"
+        },
+        {
+          "name_en": "product_name",
+          "name_cn": "商品名称",
+          "type": "VARCHAR(256)",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "商品名称"
+        },
+        {
+          "name_en": "description",
+          "name_cn": "商品描述",
+          "type": "TEXT",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "商品详细描述"
+        },
+        {
+          "name_en": "attributes",
+          "name_cn": "扩展属性",
+          "type": "JSONB",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "品牌/颜色/尺寸等扩展属性"
+        },
+        {
+          "name_en": "tags",
+          "name_cn": "标签数组",
+          "type": "TEXT[]",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "商品标签数组"
+        },
+        {
+          "name_en": "price",
+          "name_cn": "定价",
+          "type": "NUMERIC(12,2)",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "商品标价"
+        },
+        {
+          "name_en": "stock_qty",
+          "name_cn": "库存数量",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "当前库存"
+        },
+        {
+          "name_en": "search_vector",
+          "name_cn": "搜索向量",
+          "type": "TSVECTOR",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "全文检索向量"
+        },
+        {
+          "name_en": "created_at",
+          "name_cn": "创建时间",
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "创建时间"
+        },
+        {
+          "name_en": "updated_at",
+          "name_cn": "更新时间",
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "最后更新时间"
+        }
+      ]
+    },
+    {
+      "id": "ds_og_dim_categories",
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:opengauss,og_catalog.dim.categories,PROD)",
+      "schema": "dim",
+      "table": "categories",
+      "layer": "DIM",
+      "is_intermediate": false,
+      "is_partitioned": false,
+      "partition_keys": [],
+      "comment": "类目维度表 / Category dimension",
+      "primary_keys": [
+        "category_id"
+      ],
+      "columns": [
+        {
+          "name_en": "category_id",
+          "name_cn": "类目ID",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "类目ID"
+        },
+        {
+          "name_en": "category_name",
+          "name_cn": "类目名称",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "中文类目名"
+        },
+        {
+          "name_en": "category_name_en",
+          "name_cn": "类目英文名",
+          "type": "VARCHAR(128)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "英文类目名"
+        },
+        {
+          "name_en": "parent_id",
+          "name_cn": "父类目ID",
+          "type": "INTEGER",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "上级类目"
+        },
+        {
+          "name_en": "is_leaf",
+          "name_cn": "是否叶子",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "叶子节点标记"
+        }
+      ]
+    },
+    {
+      "id": "ds_og_dim_employees",
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:opengauss,og_catalog.dim.employees,PROD)",
+      "schema": "dim",
+      "table": "employees",
+      "layer": "DIM",
+      "is_intermediate": false,
+      "is_partitioned": false,
+      "partition_keys": [],
+      "comment": "员工组织结构维度表 / Employee org dimension",
+      "primary_keys": [
+        "employee_id"
+      ],
+      "columns": [
+        {
+          "name_en": "employee_id",
+          "name_cn": "员工ID",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "员工唯一ID"
+        },
+        {
+          "name_en": "employee_name",
+          "name_cn": "员工姓名",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "员工中文姓名"
+        },
+        {
+          "name_en": "employee_name_en",
+          "name_cn": "员工英文名",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "英文名"
+        },
+        {
+          "name_en": "manager_id",
+          "name_cn": "上级ID",
+          "type": "INTEGER",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "直接上级员工ID"
+        },
+        {
+          "name_en": "department_id",
+          "name_cn": "部门ID",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "所属部门"
+        },
+        {
+          "name_en": "job_title",
+          "name_cn": "职位",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "职位名称"
+        }
+      ]
+    },
+    {
+      "id": "ds_og_dwd_resource_bookings",
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:opengauss,og_catalog.dwd.resource_bookings,PROD)",
+      "schema": "dwd",
+      "table": "resource_bookings",
+      "layer": "DWD",
+      "is_intermediate": false,
+      "is_partitioned": false,
+      "partition_keys": [],
+      "comment": "资源预订表（含EXCLUDE约束）/ Resource bookings with EXCLUDE constraint",
+      "primary_keys": [
+        "booking_id"
+      ],
+      "columns": [
+        {
+          "name_en": "booking_id",
+          "name_cn": "预订ID",
+          "type": "BIGSERIAL",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "自增预订ID"
+        },
+        {
+          "name_en": "resource_id",
+          "name_cn": "资源ID",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "预订资源ID"
+        },
+        {
+          "name_en": "user_id",
+          "name_cn": "用户ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "预订用户"
+        },
+        {
+          "name_en": "booking_start",
+          "name_cn": "预订开始",
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "预订开始时间"
+        },
+        {
+          "name_en": "booking_end",
+          "name_cn": "预订结束",
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "预订结束时间"
+        },
+        {
+          "name_en": "status",
+          "name_cn": "预订状态",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "CONFIRMED/CANCELLED"
+        }
+      ]
+    },
+    {
+      "id": "ds_og_ads_mv_daily_gmv",
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:opengauss,og_catalog.ads.mv_daily_gmv,PROD)",
+      "schema": "ads",
+      "table": "mv_daily_gmv",
+      "layer": "ADS",
+      "is_intermediate": false,
+      "is_partitioned": false,
+      "partition_keys": [],
+      "comment": "每日GMV物化视图 / Daily GMV materialized view",
+      "primary_keys": [
+        "stat_date",
+        "region_id",
+        "category_id",
+        "pay_channel"
+      ],
+      "columns": [
+        {
+          "name_en": "stat_date",
+          "name_cn": "统计日期",
+          "type": "DATE",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "统计日期"
+        },
+        {
+          "name_en": "region_id",
+          "name_cn": "区域ID",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "区域ID"
+        },
+        {
+          "name_en": "category_id",
+          "name_cn": "类目ID",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "类目ID"
+        },
+        {
+          "name_en": "pay_channel",
+          "name_cn": "支付渠道",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "支付渠道"
+        },
+        {
+          "name_en": "gmv",
+          "name_cn": "成交总额",
+          "type": "NUMERIC(18,2)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "当日GMV"
+        },
+        {
+          "name_en": "order_cnt",
+          "name_cn": "订单数",
+          "type": "BIGINT",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "成交订单数"
+        },
+        {
+          "name_en": "buyer_cnt",
+          "name_cn": "买家数",
+          "type": "BIGINT",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "独立买家数"
+        },
+        {
+          "name_en": "avg_order_value",
+          "name_cn": "客单价",
+          "type": "NUMERIC(12,2)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "平均订单金额"
+        },
+        {
+          "name_en": "median_order_value",
+          "name_cn": "中位客单价",
+          "type": "NUMERIC(12,2)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "订单金额中位数"
+        }
+      ]
+    },
+    {
+      "id": "ds_og_staging_products_raw",
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:opengauss,og_catalog.staging.products_raw,PROD)",
+      "schema": "staging",
+      "table": "products_raw",
+      "layer": "STAGING",
+      "is_intermediate": false,
+      "is_partitioned": false,
+      "partition_keys": [],
+      "comment": "商品原始数据暂存表 / Raw product staging",
+      "primary_keys": [
+        "product_id"
+      ],
+      "columns": [
+        {
+          "name_en": "product_id",
+          "name_cn": "商品ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "商品ID"
+        },
+        {
+          "name_en": "product_name",
+          "name_cn": "商品名称",
+          "type": "VARCHAR(256)",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "商品名称"
+        },
+        {
+          "name_en": "brand_name",
+          "name_cn": "品牌名",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "品牌"
+        },
+        {
+          "name_en": "category_id",
+          "name_cn": "类目ID",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "类目"
+        },
+        {
+          "name_en": "price",
+          "name_cn": "价格",
+          "type": "NUMERIC(12,2)",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "定价"
+        },
+        {
+          "name_en": "description",
+          "name_cn": "描述",
+          "type": "TEXT",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "商品描述"
+        },
+        {
+          "name_en": "tags",
+          "name_cn": "标签",
+          "type": "TEXT",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "逗号标签"
+        },
+        {
+          "name_en": "stock_qty",
+          "name_cn": "库存",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "库存数量"
+        },
+        {
+          "name_en": "is_active",
+          "name_cn": "是否激活",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "上架标记"
+        },
+        {
+          "name_en": "color",
+          "name_cn": "颜色",
+          "type": "VARCHAR(32)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "颜色"
+        },
+        {
+          "name_en": "size_info",
+          "name_cn": "尺寸",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "尺寸信息"
+        },
+        {
+          "name_en": "material",
+          "name_cn": "材质",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "材质"
+        },
+        {
+          "name_en": "weight_kg",
+          "name_cn": "重量(kg)",
+          "type": "NUMERIC(8,3)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "商品重量"
+        },
+        {
+          "name_en": "origin_country",
+          "name_cn": "原产国",
+          "type": "VARCHAR(32)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "原产国"
+        }
+      ]
+    }
+  ]
+}
