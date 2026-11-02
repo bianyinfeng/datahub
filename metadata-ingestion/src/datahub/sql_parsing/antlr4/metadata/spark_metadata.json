@@ -1,0 +1,712 @@
+{
+  "engine": "SPARK",
+  "catalog": "hive_catalog",
+  "generated_at": "2024-01-01T00:00:00Z",
+  "datasets": [
+    {
+      "id": "ds_sp_ods_orders",
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:spark,hive_catalog.ods.orders,PROD)",
+      "schema": "ods",
+      "table": "orders",
+      "layer": "ODS",
+      "is_intermediate": false,
+      "is_partitioned": true,
+      "partition_keys": [
+        "dt"
+      ],
+      "comment": "原始订单表 / Raw orders table",
+      "primary_keys": [
+        "order_id"
+      ],
+      "columns": [
+        {
+          "name_en": "order_id",
+          "name_cn": "订单ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "订单唯一标识"
+        },
+        {
+          "name_en": "user_id",
+          "name_cn": "用户ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "下单用户ID"
+        },
+        {
+          "name_en": "product_id",
+          "name_cn": "商品ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "商品ID"
+        },
+        {
+          "name_en": "order_amount",
+          "name_cn": "订单金额",
+          "type": "DECIMAL(18,2)",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "订单总金额（含折扣前）"
+        },
+        {
+          "name_en": "discount_amount",
+          "name_cn": "优惠金额",
+          "type": "DECIMAL(18,2)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "优惠折扣金额"
+        },
+        {
+          "name_en": "pay_channel",
+          "name_cn": "支付渠道",
+          "type": "STRING",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "支付方式：ALIPAY/WECHAT/CARD"
+        },
+        {
+          "name_en": "order_status",
+          "name_cn": "订单状态",
+          "type": "STRING",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "PENDING/PAID/CANCELLED/INVALID"
+        },
+        {
+          "name_en": "logistics_id",
+          "name_cn": "物流ID",
+          "type": "BIGINT",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "关联物流单ID"
+        },
+        {
+          "name_en": "created_at",
+          "name_cn": "创建时间",
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "订单创建时间"
+        },
+        {
+          "name_en": "dt",
+          "name_cn": "数据日期",
+          "type": "STRING",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "分区字段，格式yyyy-MM-dd"
+        }
+      ]
+    },
+    {
+      "id": "ds_sp_ods_order_items",
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:spark,hive_catalog.ods.order_items,PROD)",
+      "schema": "ods",
+      "table": "order_items",
+      "layer": "ODS",
+      "is_intermediate": false,
+      "is_partitioned": true,
+      "partition_keys": [
+        "dt"
+      ],
+      "comment": "订单明细表 / Order line items",
+      "primary_keys": [
+        "item_id"
+      ],
+      "columns": [
+        {
+          "name_en": "item_id",
+          "name_cn": "明细ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "行项目唯一ID"
+        },
+        {
+          "name_en": "order_id",
+          "name_cn": "订单ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "关联订单ID"
+        },
+        {
+          "name_en": "product_id",
+          "name_cn": "商品ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "商品ID"
+        },
+        {
+          "name_en": "quantity",
+          "name_cn": "购买数量",
+          "type": "INT",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "购买件数"
+        },
+        {
+          "name_en": "unit_price",
+          "name_cn": "单价",
+          "type": "DECIMAL(12,2)",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "商品成交单价"
+        },
+        {
+          "name_en": "pay_status",
+          "name_cn": "支付状态",
+          "type": "STRING",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "支付状态"
+        },
+        {
+          "name_en": "dt",
+          "name_cn": "数据日期",
+          "type": "STRING",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "分区字段"
+        }
+      ]
+    },
+    {
+      "id": "ds_sp_ods_user_events",
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:spark,hive_catalog.ods.user_events,PROD)",
+      "schema": "ods",
+      "table": "user_events",
+      "layer": "ODS",
+      "is_intermediate": false,
+      "is_partitioned": true,
+      "partition_keys": [
+        "dt"
+      ],
+      "comment": "用户行为日志 / User behavior events",
+      "primary_keys": [
+        "event_id"
+      ],
+      "columns": [
+        {
+          "name_en": "event_id",
+          "name_cn": "事件ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "事件唯一ID"
+        },
+        {
+          "name_en": "user_id",
+          "name_cn": "用户ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "用户ID"
+        },
+        {
+          "name_en": "event_type",
+          "name_cn": "事件类型",
+          "type": "STRING",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "click/view/buy/cart"
+        },
+        {
+          "name_en": "item_id",
+          "name_cn": "商品ID",
+          "type": "BIGINT",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "关联商品ID"
+        },
+        {
+          "name_en": "properties",
+          "name_cn": "扩展属性",
+          "type": "STRING",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "JSON格式扩展属性"
+        },
+        {
+          "name_en": "platform",
+          "name_cn": "平台",
+          "type": "STRING",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "APP/WEB/MINI"
+        },
+        {
+          "name_en": "session_id",
+          "name_cn": "会话ID",
+          "type": "STRING",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "用户会话标识"
+        },
+        {
+          "name_en": "created_at",
+          "name_cn": "事件时间",
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "事件发生时间"
+        },
+        {
+          "name_en": "dt",
+          "name_cn": "数据日期",
+          "type": "STRING",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "分区字段"
+        }
+      ]
+    },
+    {
+      "id": "ds_sp_dim_users",
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:spark,hive_catalog.dim.users,PROD)",
+      "schema": "dim",
+      "table": "users",
+      "layer": "DIM",
+      "is_intermediate": false,
+      "is_partitioned": false,
+      "partition_keys": [],
+      "comment": "用户维度表 / User dimension",
+      "primary_keys": [
+        "user_id"
+      ],
+      "columns": [
+        {
+          "name_en": "user_id",
+          "name_cn": "用户ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "用户唯一标识"
+        },
+        {
+          "name_en": "username",
+          "name_cn": "用户名",
+          "type": "STRING",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "用户显示名"
+        },
+        {
+          "name_en": "email",
+          "name_cn": "邮箱",
+          "type": "STRING",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "注册邮箱"
+        },
+        {
+          "name_en": "phone",
+          "name_cn": "手机号",
+          "type": "STRING",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "手机号码"
+        },
+        {
+          "name_en": "age_group",
+          "name_cn": "年龄段",
+          "type": "STRING",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "18-24/25-34/35-44/45+"
+        },
+        {
+          "name_en": "gender",
+          "name_cn": "性别",
+          "type": "STRING",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "M/F/U"
+        },
+        {
+          "name_en": "city",
+          "name_cn": "城市",
+          "type": "STRING",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "所在城市"
+        },
+        {
+          "name_en": "region_id",
+          "name_cn": "区域ID",
+          "type": "INT",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "关联区域维度"
+        },
+        {
+          "name_en": "vip_level",
+          "name_cn": "会员等级",
+          "type": "STRING",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "NORMAL/GOLD/VIP"
+        },
+        {
+          "name_en": "is_fraud",
+          "name_cn": "是否欺诈",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "欺诈标记"
+        },
+        {
+          "name_en": "register_time",
+          "name_cn": "注册时间",
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "账号注册时间"
+        }
+      ]
+    },
+    {
+      "id": "ds_sp_dim_products",
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:spark,hive_catalog.dim.products,PROD)",
+      "schema": "dim",
+      "table": "products",
+      "layer": "DIM",
+      "is_intermediate": false,
+      "is_partitioned": false,
+      "partition_keys": [],
+      "comment": "商品维度表 / Product dimension",
+      "primary_keys": [
+        "product_id"
+      ],
+      "columns": [
+        {
+          "name_en": "product_id",
+          "name_cn": "商品ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "商品唯一ID"
+        },
+        {
+          "name_en": "product_name",
+          "name_cn": "商品名称",
+          "type": "STRING",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "商品名称"
+        },
+        {
+          "name_en": "category_id",
+          "name_cn": "类目ID",
+          "type": "INT",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "叶子类目ID"
+        },
+        {
+          "name_en": "brand_id",
+          "name_cn": "品牌ID",
+          "type": "INT",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "品牌ID"
+        },
+        {
+          "name_en": "price",
+          "name_cn": "定价",
+          "type": "DECIMAL(12,2)",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "商品标价"
+        },
+        {
+          "name_en": "tags",
+          "name_cn": "标签",
+          "type": "STRING",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "逗号分隔的标签"
+        },
+        {
+          "name_en": "is_active",
+          "name_cn": "是否上架",
+          "type": "INT",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "1=上架 0=下架"
+        }
+      ]
+    },
+    {
+      "id": "ds_sp_dim_categories",
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:spark,hive_catalog.dim.categories,PROD)",
+      "schema": "dim",
+      "table": "categories",
+      "layer": "DIM",
+      "is_intermediate": false,
+      "is_partitioned": false,
+      "partition_keys": [],
+      "comment": "类目维度表 / Category dimension",
+      "primary_keys": [
+        "category_id"
+      ],
+      "columns": [
+        {
+          "name_en": "category_id",
+          "name_cn": "类目ID",
+          "type": "INT",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "类目唯一ID"
+        },
+        {
+          "name_en": "category_name",
+          "name_cn": "类目名称",
+          "type": "STRING",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "类目中文名"
+        },
+        {
+          "name_en": "parent_id",
+          "name_cn": "父类目ID",
+          "type": "INT",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "上级类目ID，根类目为NULL"
+        },
+        {
+          "name_en": "category_path",
+          "name_cn": "类目路径",
+          "type": "STRING",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "完整路径，用/分隔"
+        },
+        {
+          "name_en": "is_leaf",
+          "name_cn": "是否叶子节点",
+          "type": "INT",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "1=叶子类目"
+        }
+      ]
+    },
+    {
+      "id": "ds_sp_dim_brands",
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:spark,hive_catalog.dim.brands,PROD)",
+      "schema": "dim",
+      "table": "brands",
+      "layer": "DIM",
+      "is_intermediate": false,
+      "is_partitioned": false,
+      "partition_keys": [],
+      "comment": "品牌维度表 / Brand dimension",
+      "primary_keys": [
+        "brand_id"
+      ],
+      "columns": [
+        {
+          "name_en": "brand_id",
+          "name_cn": "品牌ID",
+          "type": "INT",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "品牌唯一ID"
+        },
+        {
+          "name_en": "brand_name",
+          "name_cn": "品牌名称",
+          "type": "STRING",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "品牌名称"
+        }
+      ]
+    },
+    {
+      "id": "ds_sp_dim_regions",
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:spark,hive_catalog.dim.regions,PROD)",
+      "schema": "dim",
+      "table": "regions",
+      "layer": "DIM",
+      "is_intermediate": false,
+      "is_partitioned": false,
+      "partition_keys": [],
+      "comment": "区域维度表 / Region dimension",
+      "primary_keys": [
+        "region_id"
+      ],
+      "columns": [
+        {
+          "name_en": "region_id",
+          "name_cn": "区域ID",
+          "type": "INT",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "区域唯一ID"
+        },
+        {
+          "name_en": "region_name",
+          "name_cn": "区域名",
+          "type": "STRING",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "区域名称"
+        },
+        {
+          "name_en": "country_name",
+          "name_cn": "国家名",
+          "type": "STRING",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "所属国家"
+        },
+        {
+          "name_en": "parent_id",
+          "name_cn": "父区域ID",
+          "type": "INT",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "上级区域ID"
+        }
+      ]
+    },
+    {
+      "id": "ds_sp_ads_priority_orders",
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:spark,hive_catalog.ads.priority_orders,PROD)",
+      "schema": "ads",
+      "table": "priority_orders",
+      "layer": "ADS",
+      "is_intermediate": false,
+      "is_partitioned": true,
+      "partition_keys": [
+        "dt"
+      ],
+      "comment": "优先级订单报表 / Priority orders report",
+      "primary_keys": [
+        "order_id",
+        "dt"
+      ],
+      "columns": [
+        {
+          "name_en": "order_id",
+          "name_cn": "订单ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "订单ID"
+        },
+        {
+          "name_en": "user_id",
+          "name_cn": "用户ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "用户ID"
+        },
+        {
+          "name_en": "order_amount",
+          "name_cn": "订单金额",
+          "type": "DECIMAL(18,2)",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "订单金额"
+        },
+        {
+          "name_en": "segment",
+          "name_cn": "分类标签",
+          "type": "STRING",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "HIGH_VALUE/VIP_USER"
+        },
+        {
+          "name_en": "user_rank",
+          "name_cn": "用户排名",
+          "type": "INT",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "用户下单金额排名"
+        },
+        {
+          "name_en": "user_total_spent",
+          "name_cn": "用户累计消费",
+          "type": "DECIMAL(18,2)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "历史总消费"
+        },
+        {
+          "name_en": "dt",
+          "name_cn": "数据日期",
+          "type": "STRING",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "分区日期"
+        }
+      ]
+    },
+    {
+      "id": "ds_sp_dim_bom_components",
+      "urn": "urn:li:dataset:(urn:li:dataPlatform:spark,hive_catalog.dim.bom_components,PROD)",
+      "schema": "dim",
+      "table": "bom_components",
+      "layer": "DIM",
+      "is_intermediate": false,
+      "is_partitioned": false,
+      "partition_keys": [],
+      "comment": "BOM物料清单 / Bill of Materials",
+      "primary_keys": [
+        "component_id"
+      ],
+      "columns": [
+        {
+          "name_en": "component_id",
+          "name_cn": "物料ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "primary_key": true,
+          "comment": "物料唯一ID"
+        },
+        {
+          "name_en": "parent_id",
+          "name_cn": "父物料ID",
+          "type": "BIGINT",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "上级物料ID"
+        },
+        {
+          "name_en": "component_name",
+          "name_cn": "物料名称",
+          "type": "STRING",
+          "nullable": false,
+          "primary_key": false,
+          "comment": "物料名称"
+        },
+        {
+          "name_en": "unit",
+          "name_cn": "计量单位",
+          "type": "STRING",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "计量单位"
+        },
+        {
+          "name_en": "quantity",
+          "name_cn": "需求数量",
+          "type": "DECIMAL(10,4)",
+          "nullable": true,
+          "primary_key": false,
+          "comment": "所需数量"
+        }
+      ]
+    }
+  ]
+}
