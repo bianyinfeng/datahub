@@ -143,10 +143,12 @@ groupByItemSet  : LPAREN groupByItemList RPAREN | LPAREN RPAREN ;
 
 queryOrganization
     : (ORDER BY sortItem (COMMA sortItem)*)?
-      (LIMIT limit=(expression | ALL))?
+      (LIMIT limitClause)?
       (OFFSET offset=expression)?
       (FETCH FIRST fetchCount=expression ROWS ONLY)?
     ;
+
+limitClause : ALL | expression ;
 
 sortItem
     : expression ordering=(ASC | DESC)? (NULLS nullOrder=(FIRST | LAST))?
@@ -433,7 +435,7 @@ primaryExpression
     | mapExpression                                                    # map
     | STRUCT LPAREN (namedArgument (COMMA namedArgument)*)? RPAREN    # struct
     | EXTRACT LPAREN identifier FROM expression RPAREN                # extract
-    | expression OVER windowSpec                                       # windowExpr
+    | primaryExpression OVER windowSpec                               # windowExpr
     | FILTER LPAREN WHERE expression RPAREN                           # filterExpr
     ;
 
@@ -696,6 +698,7 @@ REPAIR         : R E P A I R ;
 REPLACE        : R E P L A C E ;
 RESTRICT       : R E S T R I C T ;
 RETURNING      : R E T U R N I N G ;
+LEFT           : L E F T ;
 RIGHT          : R I G H T ;
 RLIKE          : R L I K E ;
 ROLLUP         : R O L L U P ;
@@ -765,14 +768,6 @@ WITHIN         : W I T H I N ;
 YEAR           : Y E A R ;
 YEARS          : Y E A R S ;
 
-// Non-reserved keywords (used as identifiers too)
-fragment nonReserved_fragment : ANTI | CACHE | CLUSTER | CODEGEN | COLLECT | COMPUTE
-    | COST | DATA | DATABASE | DEFINED | DISTRIBUTE | EXCHANGE | EXTENDED | FORMATTED
-    | HASH | INLINE | KEY | LANGUAGE | LAST | LIST | LOCATION | MATCH | MATCHED
-    | MSCK | NULLS | ORDINALITY | PARTITION | QUALIFY | RANGE | RECORD | REFRESH
-    | REPAIR | RESTRICT | SAMPLE | SERDE | SETS | SHOW | SORT | STATISTICS
-    | STORED | TABLES | TBLPROPERTIES | TRANSFORM | TYPE | UNCACHE | USE ;
-
 nonReserved
     : ADD | ALL | ALTER | ANALYZE | ANTI | ARRAY | ASC | AT | BIGINT | BIT | BOOLEAN
     | BOTH | BYTES | BYTEA | BY | CACHE | CALL | CASCADE | CHAR | CHARACTER | CIDR
@@ -815,7 +810,7 @@ AMPERSAND    : '&' ;
 PIPE         : '|' ;
 HAT          : '^' ;
 CONCAT_PIPE  : '||' ;
-ARROW        : '=>' | '->' ;
+ARROW        : '=>' ;
 COLON        : ':' ;
 SEMI         : ';' ;
 COMMA        : ',' ;

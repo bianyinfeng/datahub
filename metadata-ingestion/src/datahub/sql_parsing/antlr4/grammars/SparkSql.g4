@@ -153,7 +153,7 @@ queryOrganization
     : clusterByClause?
     | distributeByClause? sortByClause?
     | (ORDER BY sortItem (COMMA sortItem)*)?
-      (LIMIT limit=(expression | ALL))?
+      (LIMIT limitClause)?
       (OFFSET offset=expression)?
     ;
 

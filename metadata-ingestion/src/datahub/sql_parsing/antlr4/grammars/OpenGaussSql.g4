@@ -458,7 +458,7 @@ SECURITY         : S E C U R I T Y ;
 SERIALIZABLE     : S E R I A L I Z A B L E ;
 SHARE            : S H A R E ;
 SIMILAR          : S I M I L A R ;
-SKIP             : S K I P ;
+SKIP_KW          : S K I P ;
 STABLE           : S T A B L E ;
 START            : S T A R T ;
 STDIN            : S T D I N ;

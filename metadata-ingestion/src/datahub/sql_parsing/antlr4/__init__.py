@@ -8,7 +8,8 @@ Features:
 - DataHub URN integration
 """
 
-from datahub.sql_parsing.antlr4.parser import SqlParser
+from datahub.sql_parsing.antlr4.antlr4_visitor import parse_sql
+from datahub.sql_parsing.antlr4.parser import SqlParser  # legacy regex parser kept for compatibility
 from datahub.sql_parsing.antlr4.lineage_builder import LineageBuilder
 from datahub.sql_parsing.antlr4.models import (
     LineageGraph,
@@ -19,7 +20,8 @@ from datahub.sql_parsing.antlr4.models import (
 )
 
 __all__ = [
-    "SqlParser",
+    "parse_sql",   # preferred: ANTLR4-based parser
+    "SqlParser",   # legacy: regex-based parser
     "LineageBuilder",
     "LineageGraph",
     "OperatorNode",
